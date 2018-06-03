@@ -1,0 +1,62 @@
+---
+
+#####################
+# variables for jenkins 
+#
+######################
+
+jenkins_rpm_url: https://pkg.jenkins.io/redhat/
+installation_user: user1
+temp_download: /home/"{{installation_user}}"/temp_download/
+
+
+#jenkins installation
+jenkins_source: jenkins-2.89-1.1.noarch.rpm
+jenkins_port: 9000
+jenkins_home: /var/lib/jenkins
+jenkins_url_user: admin
+jenkins_url_password: admin
+jenkins_keys_folder: "{{ jenkins_home }}/.ssh"
+ 
+
+#jenkins credentials
+jenkins_credential_scope: GLOBAL
+jenkins_credential_id: Jenkinsuser
+jenkins_credential_username: Jenkinsuser
+jenkins_credential_password: jenkinspwd
+jenkins_credential_desc: intial_jenkins_user
+
+
+#jenkins configuration
+numExecutors: 4
+sonarName: "SonarQube_server"
+sonarVersion: "5.3"
+sonarScannerName: "sonarQubescanner"
+sonarScannerPath: "/opt/sonar/sonarscanner"
+sonarhost: "sonar server ip"
+
+#jenkins initial job creation
+init_jenkin_job_name: Initial_job
+jenkins_gitPath: "git@github.lbg.eu-gb.bluemix.net:balaji-sr/GOFE-Pay-CS.git"
+
+# jenkins plugins
+jenkins_plugins_nexus_repo_url: http://nexus.sandbox.extranet.group/nexus/content/repositories/binaries/jenkins-plugins-v2
+jenkins_plugins_destination: "{{ temp_download }}"
+jenkins_plugins_dir: '/var/lib/jenkins/plugins'
+jenkins_plugins_url: "{{ jenkins_plugins_nexus_repo_url }}"
+jenkins_user: jenkins
+jenkins_group: jenkins
+
+jenkins_plugins:
+  - role-strategy
+  - matrix-auth
+  - workflow-aggregator
+  - workflow-multibranch
+  - github-branch-source
+  - pipeline-maven
+  - parameterized-trigger
+  - job-dsl
+  - build-pipeline
+  - sonar
+  - shared-workspace
+  - blueocean

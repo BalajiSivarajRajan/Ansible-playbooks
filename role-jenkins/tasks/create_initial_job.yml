@@ -1,0 +1,26 @@
+---
+####
+# create the inital job by pulling the DSL from GitHub
+#
+####
+- name: create initial jenkins job
+  jenkins_script:
+    script: "{{init_jenkin_job_dsl_script}}"
+    url: http://localhost:{{jenkins_port}}
+    user: "{{ jenkins_url_user }}"
+    password: "{{ jenkins_url_password }}"
+    args:
+      jenkins_mode: Node.Mode.EXCLUSIVE
+
+- name: build the initial job
+  jenkins_script:
+    script: "{{build_init_jenkin_job_dsl_script}}"
+    url: http://localhost:{{jenkins_port}}
+    user: "{{ jenkins_url_user }}"
+    password: "{{ jenkins_url_password }}"
+    args:
+      jenkins_mode: Node.Mode.EXCLUSIVE
+
+- name: pause 10 secs for jenkins to start
+  pause:
+     seconds: 10

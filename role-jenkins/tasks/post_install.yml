@@ -1,0 +1,85 @@
+---
+####################
+# configure Jenkins port 
+# turn off Jenkins default setup wizard
+# reset the password for admin user
+####################
+#config port
+
+  - name: configure the jenkins port
+    lineinfile:
+      path: /etc/sysconfig/jenkins
+      regexp: 'JENKINS_PORT='
+      line: "JENKINS_PORT={{ jenkins_port }}"
+    notify: restart jenkins
+
+
+  - name: Ensure jenkins is started
+    service:
+      name: jenkins
+      state: started
+
+# pause for the server to start
+  - name: pause 30 secs
+    pause:
+       seconds: 30
+
+# turn off the setup wizard on jenkins config file
+  - name: turn off jenkins setup wizard
+    lineinfile:
+       dest: /etc/sysconfig/jenkins
+       regexp: '^JENKINS_JAVA_OPTIONS'
+       line: 'JENKINS_JAVA_OPTIONS="-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false"'
+    notify: restart jenkins
+
+# turn on the jenkins cli access
+  - name: enable jenkins cli access {{ jenkins_home }}/jenkins.CLI.xml
+    xml:
+      path: "{{ jenkins_home }}/jenkins.CLI.xml"
+      xpath: /jenkins.CLI/enabled
+      value: "true"
+
+  - name: Ensure jenkins is restarted after configuration
+    service:
+      name: jenkins
+      state: restarted
+
+  - name: pause 30 secs
+    pause:
+       seconds: 30
+
+  - name: Get the jenkins-cli jarfile from the Jenkins server.
+    get_url:
+      url: "http://localhost:{{ jenkins_port }}/jnlpJars/jenkins-cli.jar"
+      dest: "{{ temp_download }}jenkins-cli.jar"
+    become_user: "{{ installation_user }}"
+
+  - name: change the permission of Jenkins-cli.jar
+    file:
+      path: "{{ temp_download }}jenkins-cli.jar"
+      mode: 0755
+    become_user: "{{ installation_user }}"
+
+  - name: Ensure the initial Admin Password file present
+    stat:
+       path: /var/lib/jenkins/secrets/initialAdminPassword
+    register: stat_result
+
+  - name: get initial admin password - stat_result.stat.exists.stdout
+    shell: cat /var/lib/jenkins/secrets/initialAdminPassword
+    when: stat_result.stat.exists == True
+    register: jenkins_pw
+
+  - name: modify user admin (resets password to {{ jenkins_url_password }}) - jenkins_pw.stdout
+    shell: echo 'jenkins.model.Jenkins.instance.securityRealm.createAccount("admin", "{{ jenkins_url_password }}")' | sudo java -jar jenkins-cli.jar -auth admin:{{ jenkins_pw.stdout }} -s http://localhost:{{ jenkins_port }}/ groovy =
+    args:
+       chdir: "{{ temp_download }}"
+    when: stat_result.stat.exists == True
+
+# turn off the jenkins cli access
+  - name: disable jenkins cli access
+    xml:
+      path: "{{ jenkins_home }}/jenkins.CLI.xml"
+      xpath: /jenkins.CLI/enabled
+      value: "false"
+    notify: restart jenkins

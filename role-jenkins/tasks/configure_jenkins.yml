@@ -1,0 +1,24 @@
+---
+####
+# confiure jenkins for number of executors, sonar server, sonarscanner
+####
+- name: Configure the no. of executors
+    jenkins_script:
+      script: "{{executors_update_script}}"
+      url: http://localhost:{{jenkins_port}}
+      user: "{{ jenkins_url_user }}"
+      password: "{{ jenkins_url_password }}"
+
+- name: Configure sonar server
+  jenkins_script:
+    script: "{{sonarqube_config_script}}"
+    url: http://localhost:{{jenkins_port}}
+    user: "{{ jenkins_url_user }}"
+    password: "{{ jenkins_url_password }}"
+
+- name: configure sonarscanner
+  jenkins_script:
+    script: "{{sonarscanner_script}}"
+    url: http://localhost:{{jenkins_port}}
+    user: "{{ jenkins_url_user }}"
+    password: "{{ jenkins_url_password }}"

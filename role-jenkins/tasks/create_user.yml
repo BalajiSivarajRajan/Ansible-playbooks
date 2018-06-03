@@ -1,0 +1,13 @@
+---
+####
+# create redhat user for Jenkins 
+####
+- name: create user {{ jenkins_user }}
+    user:
+      name: "{{ jenkins_user }}"
+      password: "{{ jenkins_password }}"
+      group: "{{ jenkins_group }}"
+      home: "{{ jenkins_home }}"
+      createhome: no
+      generate_ssh_key: no
+      state: present

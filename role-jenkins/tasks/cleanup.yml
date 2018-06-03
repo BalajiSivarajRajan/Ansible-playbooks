@@ -1,0 +1,21 @@
+---
+#####
+# house keeping:
+# to remove the intial admin password file, jenkin-cli, scripts file
+# 
+#####
+
+- name: remove initial AdminPassword file
+  file:
+    path: /var/lib/jenkins/secrets/initialAdminPassword
+    state: absent
+
+- name: remove Jenkins-cli.jar
+  file:
+    path: "{{ temp_download }}jenkins-cli.jar"
+    state: absent
+
+- name: remove plugins scripts
+  file:
+    path: "{{temp_download}}/scripts"
+    state: absent
