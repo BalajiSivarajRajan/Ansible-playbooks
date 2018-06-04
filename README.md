@@ -48,3 +48,5 @@
 
 ## Conclusion
   Ansible can be used to automate the IT environments whether they are hosted on tradational bare metal, VM, cloud and it can automate the configuration of wide range of systems and devices such as databases, app servers, tools, etcs.
+  
+  In this technical journal, I have created Ansible playbooks for Jenkins with configuration and SonarQube with assumpition MySQL is installed.
