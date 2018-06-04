@@ -30,7 +30,7 @@
   
   Playbook looks like:
  ``` 
-      ---
+    ---
     - hosts: webservers
         roles:
     - common
