@@ -1,0 +1,39 @@
+- include: pre_install.yml
+
+  - name: install jenkins {{ jenkins_source }}
+    package:
+      name: "{{ var_download + jenkins_source }}"
+      state: present
+   notify: restart jenkins
+
+  - name: Ensure jenkins enabled at startup
+    service:
+      name: jenkins
+      enabled: yes
+
+  - name: ensure jenkins is installed
+    package:
+      name: jenkins
+      state: installed
+
+  - include: post_install.yml
+
+  - name: pause 30 secs for jenkins to start
+    pause:
+       seconds: 30
+
+  - include: plugins_install.yml
+
+  - name: Ensure jenkins is restarted after plugin installation
+    service:
+      name: jenkins
+      state: restarted
+
+  - name: pause 30 secs for jenkins to start
+    pause:
+       seconds: 30
+  
+  - include: create_credentialuser.yml
+  - include: config_jenkins.yml
+  - include: create_trigger_job.yml
+  - include: tidy_up.yml

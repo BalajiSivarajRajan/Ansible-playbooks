@@ -7,7 +7,7 @@
 
 jenkins_rpm_url: https://pkg.jenkins.io/redhat/
 installation_user: user1
-temp_download: /home/"{{installation_user}}"/temp_download/
+var_download: /home/"{{installation_user}}"/temp_location/
 
 
 #jenkins installation
@@ -28,7 +28,7 @@ jenkins_credential_desc: intial_jenkins_user
 
 
 #jenkins configuration
-numExecutors: 4
+numExecutors: 2
 sonarName: "SonarQube_server"
 sonarVersion: "5.3"
 sonarScannerName: "sonarQubescanner"
