@@ -6,14 +6,15 @@
  # Initial creation: Sonar variables
 ###############################################
 # Sonar variables
-sonar_download_url: /home/ec2-user/local_repo/
-sonar_version_directory: sonarqube-6.7
-workspace: /home/ec2-user/temp_download/
-sonar_filename: sonarqube-6.7.zip 
+sonar_download_url: https://sonarsource.bintray.com/Distribution/sonarqube/sonarqube-6.7.4.zip
+sonar_version_directory: sonarqube-6.7.4
+installation_user: ec2-user
+workspace: /home/"{{installation_user}}"/temp_download/
+sonar_filename: sonarqube-6.7.4.zip 
 sonar_port: 9090
 sonar_search_port: 9095
-installation_user: ec2-user
-sonar_user: root #"{{ installation_user }}"
+
+sonar_user: "{{ installation_user }}"
 
 # MySQL database connection details.
 sonar_mysql_username: sonar

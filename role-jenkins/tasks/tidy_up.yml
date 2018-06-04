@@ -12,10 +12,10 @@
 
 - name: remove Jenkins-cli.jar
   file:
-    path: "{{ temp_download }}jenkins-cli.jar"
+    path: "{{ var_download }}jenkins-cli.jar"
     state: absent
 
 - name: remove plugins scripts
   file:
-    path: "{{temp_download}}/scripts"
+    path: "{{var_download}}/scripts"
     state: absent
