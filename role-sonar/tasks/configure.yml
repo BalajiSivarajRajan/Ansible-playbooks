@@ -1,0 +1,40 @@
+---
+################################################
+#/sonar/tasks/configure.yml
+#Author: Balaji 
+#Description: 
+#Initial creation: Configure sonar for port, JDBC
+###############################################
+
+- name: set the run user {{ sonar_user }}
+  lineinfile:
+    dest: /usr/local/sonar/bin/linux-x86-64/sonar.sh
+    regexp: "^#RUN_AS_USER="
+    line: "RUN_AS_USER={{ sonar_user }}"
+
+- name: change the default port of sonar to {{ sonar_port }} 
+  lineinfile:
+    dest: /usr/local/sonar/conf/sonar.properties
+    regexp: "^#sonar.web.port="
+    line: "sonar.web.port={{ sonar_port }}"
+
+- name: change the default port of elasticscreach to {{ sonar_search_port }} 
+  lineinfile:
+    dest: /usr/local/sonar/conf/sonar.properties
+    regexp: "^#sonar.search.port="
+    line: "sonar.search.port={{ sonar_search_port }}"
+
+- name: Configure SonarQube JDBC settings for MySQL.
+  lineinfile:
+    dest: /usr/local/sonar/conf/sonar.properties
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  notify: restart sonar
+  with_items:
+    - regexp: "^sonar.jdbc.username"
+      line: "sonar.jdbc.username={{ sonar_mysql_username }}"
+    - regexp: "^sonar.jdbc.password"
+      line: "sonar.jdbc.password={{ sonar_mysql_password }}"
+    - regexp: "^sonar.jdbc.url"
+      line: "sonar.jdbc.url=jdbc:mysql://{{ sonar_mysql_host }}:{{ sonar_mysql_port }}/{{ sonar_mysql_database }}?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true&useConfigs=maxPerformance&useSSL=false"
+

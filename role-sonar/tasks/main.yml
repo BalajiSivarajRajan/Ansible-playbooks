@@ -1,0 +1,70 @@
+---
+##############################
+#location: /sonar/task/main.yml
+#Author: Balaji 
+ #Description: 
+ # Initial creation: install sonarqube from .zip file. Add sonar to the system startup
+#############################
+
+# copy the repo file
+- name: Copy installation files
+  copy: 
+      src: "{{ sonar_download_url + sonar_filename }}" 
+      dest: "{{ workspace }}"
+  become_user: "{{ installation_user }}"
+
+- name: Unzip Sonar.
+  unarchive:
+    src: "{{ workspace }}{{ sonar_version_directory }}.zip"
+    dest: /usr/local/
+    copy: no
+    creates: /usr/local/sonar/COPYING
+
+  
+- name: Move Sonar into place.
+  shell: >
+    mv /usr/local/{{ sonar_version_directory }} /usr/local/sonar
+    creates=/usr/local/sonar/COPYING
+
+- include: configure.yml
+
+- name: Add sonar symlinks in /usr/bin for service management.
+  file:
+    src: /usr/local/sonar/bin/linux-x86-64/sonar.sh
+    dest: /usr/bin/sonar
+    state: link
+    force: yes
+
+- name: Add sonar symlinks in init.d for service management.
+  file:
+    src: /usr/local/sonar/bin/linux-x86-64/sonar.sh
+    dest: /etc/init.d/sonar
+    state: link
+    force: yes
+
+- name: Change the ownership to {{ installation_user }}
+  file:
+    path: /usr/local/sonar/
+    owner: "{{ installation_user }}"
+    group: "{{ installation_user }}"
+    mode: 0755
+    state: directory
+    recurse: yes
+
+- name: Wait for Sonar to build for first start
+  pause: seconds=180
+  
+- name: Ensure Sonar is running and set to start on boot
+  service: 
+    name: sonar 
+    state: started 
+    enabled: yes
+
+- name: Wait for Sonar to start
+  pause: seconds=180
+  
+- name: Make sure Sonar is responding on the configured port {{ sonar_port }}
+  wait_for: 
+    port: "{{ sonar_port }}"
+    delay: 3 
+    timeout: 300

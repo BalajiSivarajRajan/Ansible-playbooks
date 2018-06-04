@@ -1,0 +1,4 @@
+---
+#/sonar/handler/main.yml
+- name: restart sonar
+  service: name=sonar state=restarted

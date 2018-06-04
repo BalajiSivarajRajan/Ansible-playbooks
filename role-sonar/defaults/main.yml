@@ -1,0 +1,30 @@
+---
+##############################################
+#sonar/default/main.yml
+#Author: Balaji 
+ #Description: 
+ # Initial creation: Sonar variables
+###############################################
+# Sonar variables
+sonar_download_url: /home/ec2-user/local_repo/
+sonar_version_directory: sonarqube-6.7
+workspace: /home/ec2-user/temp_download/
+sonar_filename: sonarqube-6.7.zip 
+sonar_port: 9090
+sonar_search_port: 9095
+installation_user: ec2-user
+sonar_user: root #"{{ installation_user }}"
+
+# MySQL database connection details.
+sonar_mysql_username: sonar
+sonar_mysql_password: sonar
+
+sonar_mysql_host: localhost
+sonar_mysql_port: "3306"
+sonar_mysql_database: sonardb
+
+
+sonar_mysql_allowed_hosts:
+  - "127.0.0.1"
+  - "::1"
+  - "localhost"
