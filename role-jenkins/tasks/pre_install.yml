@@ -1,10 +1,10 @@
 ---
 ###########################
-# creates a temp directory 
+# creates a temporary directory 
 # creates a directory for scripts
-# downloads the rpm file into the temp directory 
+# downloads the rpm file into the temporary directory 
 ###########################
-  - name: Creates temp directory "{{ var_download }}"
+  - name: Creates temporary directory "{{ var_download }}"
     file:
       path: "{{ var_download }}"
       mode: 0775
@@ -21,7 +21,7 @@
     become_user: "{{ installation_user }}"
 
 # copy the repo file
-  - name: download rpm from repo into temp location "{{ var_download }}"
+  - name: download rpm from repo into temporary location "{{ var_download }}"
     get_url:
       url: "{{ jenkins_rpm_url }}/{{ jenkins_source}}"
       dest: "{{ var_download }}"

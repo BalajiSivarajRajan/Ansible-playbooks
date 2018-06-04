@@ -51,12 +51,12 @@
   - name: Get the jenkins-cli jarfile from the Jenkins server.
     get_url:
       url: "http://localhost:{{ jenkins_port }}/jnlpJars/jenkins-cli.jar"
-      dest: "{{ temp_download }}jenkins-cli.jar"
+      dest: "{{ var_download }}jenkins-cli.jar"
     become_user: "{{ installation_user }}"
 
   - name: change the permission of Jenkins-cli.jar
     file:
-      path: "{{ temp_download }}jenkins-cli.jar"
+      path: "{{ var_download }}jenkins-cli.jar"
       mode: 0755
     become_user: "{{ installation_user }}"
 
